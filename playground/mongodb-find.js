@@ -26,37 +26,12 @@ MongoClient.connect('mongodb://localhost:27017/TodoApp', (error, db) => {
   // });
 
 
-  // db.collection('Users').find({name: 'Misha'}).toArray().then((docs)=>{
-  //   console.log('Users');
-  //   console.log(JSON.stringify(docs, undefined, 2));
-  // },(error)=>{
-  //   console.log('Unable to find the user');
-  // });
-
-  // db.collection('Todos').deleteMany({text: 'lunch'}).then((result) => {
-  //   console.log(result);
-  // });
-
-  // db.collection('Todos').deleteOne({text: 'lunch'}).then((result) => {
-  //   concole.log(result);
-  // });
-  //
-  // db.collection('Todos').deleteOne({text: 'dx'}).then((result) => {
-  //   console.log(result);
-  // });
-  //
-  // db.collection('Todos').findOneAndDelete({text: 'dx2'}).then((result) => {
-  //   console.log(result);
-  // });
-
-  // db.collection('Users').deleteMany({name: 'Test'}).then((result) => {
-  //   console.log(result);
-  // });
-
-  db.collection('Users').findOneAndDelete({
-    _id : new ObjectID('5c10eb3dab715d1f34301fc6')
-  }).then((result) => {
-    console.log(JSON.stringify(result, undefined, 2));
+  db.collection('Users').find({name: 'Misha'}).toArray().then((docs)=>{
+    console.log('Users');
+    console.log(JSON.stringify(docs, undefined, 2));
+  },(error)=>{
+    console.log('Unable to find the user');
   });
+
 
 });
