@@ -55,3 +55,5 @@ newUser.save().then((doc) => {
 },(error) => {
   console.log('Unable to save');
 });
+
+module.exports = {app};
