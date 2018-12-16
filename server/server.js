@@ -23,6 +23,14 @@ app.post('/todos', (req, res) => {
   });
 });
 
+app.get('/todos', (req, res) => {
+  Todo.find().then((todos) => {
+    res.send({todos});// its good practice to use object here. if we use array we cant add another property
+  },(error) =>{
+    res.status(400).send(error);
+  });
+});
+
 app.listen(3000, () => {
   console.log('started on port 3000');
 });
