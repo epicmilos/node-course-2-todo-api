@@ -1,6 +1,6 @@
 var express = require('express');
 var bodyParser = require('body-parser'); //takes JSON and converts it into object
-
+var ObjectID = require('mongodb');
 var {mongoose} = require('./db/mongoose.js');
 var {Todo} = require('./models/todo.js');
 var {User} = require('./models/user.js');
@@ -33,6 +33,50 @@ app.get('/todos', (req, res) => {
     res.send({todos});// its good practice to use object here. if we use array we cant add another property
   },(error) =>{
     res.status(400).send(error);
+  });
+});
+
+app.get('/todos/:id',(req,res)=>{
+  //res.status(req.params);
+  var id = req.params.id;
+
+
+if(!ObjectID.isValid(id)){
+  return res.status(404).send();
+}
+
+// findById
+// success
+// if todo - send it back
+// if no todo - 404 with empty body
+// error - 400 with empty body
+
+Todo.findById(id).then((todo)=>{
+  if(!todo){
+    return res.status(404).send();
+  }
+  res.send({todo});
+  }).catch((error)=>{
+  res.status(400).send();
+  });
+});
+
+
+app.delete('/todos/:id', (req,res)=>{
+  var id = req.params.id;
+
+  if(!ObjectID.isValid(id)){
+    return res.status(404).send(); //return prevents the rest of the function from being executed
+  }
+
+  Todo.findByIdAndRemove(id).then((todo)=>{
+    if(!todo){
+      return res.status(404).send();//send iniciates the response without body data
+    }
+    res.send({todo});
+  }).catch((e)=>{
+
+  res.status(400).send();
   });
 });
 
