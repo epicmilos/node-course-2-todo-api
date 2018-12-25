@@ -84,7 +84,7 @@ app.listen(port, () => {
   console.log(`started up at port ${port}`);
 });
 
-
+module.exports = {app};
 
 
 
@@ -102,15 +102,13 @@ app.listen(port, () => {
 //   console.log('Unable to save', error);
 // });
 
-var newUser = new User({
-  email: 'epicmilos@gmail.com',
-
-});
-
-newUser.save().then((doc) => {
-  console.log('Saved', doc);
-},(error) => {
-  console.log('Unable to save');
-});
-
-module.exports = {app};
+// var newUser = new User({
+//   email: 'epicmilos@gmail.com',
+//
+// });
+//
+// newUser.save().then((doc) => {
+//   console.log('Saved', doc);
+// },(error) => {
+//   console.log('Unable to save');
+// });
