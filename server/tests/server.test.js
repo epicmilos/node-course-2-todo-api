@@ -5,8 +5,10 @@ const {app} = require('./../server'); //ES6 destructuring
 const {Todo} = require('./../models/todo');
 
 const todos = [{
+  _id: new ObjectID(),
   text: 'f test 1'
 },{
+  _id: new ObjectID(),
   text: 's test 2'
 }];
 
@@ -74,7 +76,7 @@ describe('GET /todos', () => {
 describe('GET /todos/:id', () => {
   it('should return todo doc', (done) => {
     request(app)
-      .get(`/todos/${todos[0]._id.toHexString()}`)
+      .get(`/todos/${todos[0]._id.toHexString()}`) //we use toHexString to convert ObjectID  into a string.
       .expect(200)
       .expect((res) => {
         expect(res.body.todo.text).toBe(todos[0].text);

@@ -19,7 +19,7 @@ app.post('/todos', (req, res) => {
   var todo = new Todo({
     text: req.body.text
     //console.log(req.body); // sending JSON to express app. body gets stored by body-parser
-    //setting up a route and passing twoo arguments - url and callback (req, res)
+    //setting up a route and passing two arguments - url and callback (req, res)
   });
   todo.save().then((doc) => {
     res.send(doc); //this gives the user information id and compilted property
@@ -73,7 +73,7 @@ app.delete('/todos/:id', (req,res)=>{
     if(!todo){
       return res.status(404).send();//send iniciates the response without body data
     }
-    res.send(todo);
+    res.send({todo});
   }).catch((e)=>{
 
   res.status(400).send();
