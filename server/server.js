@@ -1,3 +1,5 @@
+require('./config/config');
+
 var _ = require('lodash');
 var express = require('express');
 var bodyParser = require('body-parser'); //takes JSON and converts it into object
@@ -11,7 +13,7 @@ var {User} = require('./models/user.js');
 
 var app = express();
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT;
 
 app.use(bodyParser.json());//config the midlewear
 //if we are writing custom midlewear itl be a funnction
