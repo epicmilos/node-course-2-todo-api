@@ -128,11 +128,19 @@ app.post('/users',(req,res)=>{
 
 app.get('/users/me',authenticate,(req,res)=>{
   res.send(req.user);
-
+});
 
 app.post('/users/login',(req,res)=>{
   var body = _.pick(req.body,['email','password']);
   res.send(body);
+
+  User.findByCredentials(body.email,body.password).then((user)=>{
+    return user.generateAuthToken().then((token)=>{
+      res.header('x-auth', token).send(user);
+    });
+  }).catch((error)=>{
+    res.status(400).send();
+  });
 });
 
   // var token = req.header('x-auth');
@@ -144,7 +152,7 @@ app.post('/users/login',(req,res)=>{
   // }).catch((error)=>{
   //   res.status(401).send();
   // });
-});
+
 
 app.listen(port, () => {
   console.log(`started up at port ${port}`);
