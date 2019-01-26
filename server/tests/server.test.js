@@ -222,25 +222,29 @@ describe('POST /users',()=>{
       });
     });
   });
+
   it('should return validation errors if request invalid',(done)=>{
 
 
     request(app)
     .post('/users')
-    .send({email: 'nema@primer.com',
-          password: 'nema'})
+    .send({
+          email: 'nema@primer.com',
+          password: 'nema'
+        })
     .expect(400)
     .end(done);
   });
 
   it('should not create a user if email in use',(done)=>{
-    var email ='misha1@primer.com';
-    var password = 'userOnePass';
+    
 
     request(app)
     .post('/users')
-    .send({email: users[0].email,
-          password: 'userOnePass'})
+    .send({
+          email: users[0].email,
+          password: 'userOnePass'
+        })
     .expect(400)
     .end(done);
   });
