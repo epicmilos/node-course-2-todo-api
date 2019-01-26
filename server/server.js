@@ -129,6 +129,12 @@ app.post('/users',(req,res)=>{
 app.get('/users/me',authenticate,(req,res)=>{
   res.send(req.user);
 
+
+app.post('/users/login',(req,res)=>{
+  var body = _.pick(req.body,['email','password']);
+  res.send(body);
+});
+
   // var token = req.header('x-auth');
   // User.findByToken(token).then((user)=>{
   //   if(!user){
