@@ -4,7 +4,7 @@ var _ = require('lodash');
 var express = require('express');
 var bodyParser = require('body-parser'); //takes JSON and converts it into object
 var {ObjectID} = require('mongodb');
-var {mongoose} = require('./db/mongoose.js');
+var {mongoose} = require('./db/mongoose');
 var {Todo} = require('./models/todo.js');
 var {User} = require('./models/user.js');
 var {authenticate} = require('./middleware/authenticate');
@@ -19,28 +19,29 @@ const port = process.env.PORT;
 app.use(bodyParser.json());//config the midlewear
 //if we are writing custom midlewear itl be a funnction
 
-app.post('/todos', (req, res) => {
+app.post('/todos', authenticate, (req, res) => {
   var todo = new Todo({
-    text: req.body.text
+    text: req.body.text,
+    _creator: req.user._id
     //console.log(req.body); // sending JSON to express app. body gets stored by body-parser
     //setting up a route and passing two arguments - url and callback (req, res)
   });
   todo.save().then((doc) => {
-    res.send(doc); //this gives the user information id and compilted property
+    res.send(doc); //this gives the user information id and complited property
   }, (error) => {
     res.status(400).send(error);
   });
 });
 
-app.get('/todos', (req, res) => {
-  Todo.find().then((todos) => {
+app.get('/todos', authenticate, (req, res) => {
+  Todo.find({_creator: req.user._id}).then((todos) => {
     res.send({todos});// its good practice to use object here. if we use array we cant add another property
   },(error) =>{
     res.status(400).send(error);
   });
 });
 
-app.get('/todos/:id',(req,res)=>{
+app.get('/todos/:id', authenticate, (req,res)=>{
   //res.status(req.params);
   var id = req.params.id;
 
@@ -55,7 +56,10 @@ if(!ObjectID.isValid(id)){
 // if no todo - 404 with empty body
 // error - 400 with empty body
 
-Todo.findById(id).then((todo)=>{
+Todo.findOne({
+  _id: id,
+  _creator: req.user._id
+}).then((todo)=>{
   if(!todo){
     return res.status(404).send();
   }
@@ -66,14 +70,17 @@ Todo.findById(id).then((todo)=>{
 });
 
 
-app.delete('/todos/:id', (req,res)=>{
+app.delete('/todos/:id', authenticate, (req,res)=>{
   var id = req.params.id;
 
   if(!ObjectID.isValid(id)){
     return res.status(404).send(); //return prevents the rest of the function from being executed
   }
 
-  Todo.findByIdAndRemove(id).then((todo)=>{
+  Todo.findOneAndRemove({
+    _id: id,
+    _creator : req.user._id
+  }).then((todo)=>{
     if(!todo){
       return res.status(404).send();//send iniciates the response without body data
     }
@@ -84,7 +91,7 @@ app.delete('/todos/:id', (req,res)=>{
   });
 });
 
-app.patch('/todos/:id',(req,res)=>{
+app.patch('/todos/:id', authenticate, (req,res)=>{
   var id = req.params.id;
   var body = _.pick(req.body,['text','completed']);
 
@@ -99,7 +106,10 @@ app.patch('/todos/:id',(req,res)=>{
     body.completedAt = null;
   }
 
-  Todo.findByIdAndUpdate(id, {$set: body}, {new: true}).then((todo)=>{
+  Todo.findOneAndUpdate({
+    _id : id,
+    _creator: req.user._id
+  }, {$set: body}, {new: true}).then((todo)=>{
     if(!todo){
     return res.status(404).send();
     }

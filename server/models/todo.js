@@ -5,7 +5,7 @@ var Todo = mongoose.model('Todo', {
   text:{
     type: String,
     required: [true, 'Text required'],
-    minlength: 3,
+    minlength: 1,
     trim: true
   },
   completed: {
@@ -15,6 +15,10 @@ var Todo = mongoose.model('Todo', {
   completedAt: {
     type: Number,
     default: null
+  },
+  _creator:{
+    type: mongoose.Schema.Types.ObjectId,
+    required: true
   }
 });
 
